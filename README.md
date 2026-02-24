@@ -49,13 +49,65 @@ Task too easy. Encoders solve it independently. Mixer correctly suppresses itsel
 ![Cross-Omics Flow](figures/06_brca_crossomics_flow.png)
 
 ---
-
 ## Key Finding
 
 SoftPermMix is **self-selecting in task difficulty**. On Pan-cancer (32 well-separated
 classes) the mixer suppresses itself — alpha stays uniform. On BRCA PAM50 (5 overlapping
 subtypes) the mixer engages — alpha diverges to [0.225, 0.272], Methy->mRNA flow exceeds
 diagonal, val accuracy improves +5%. The contrast between phases validates the mechanism.
+
+---
+## Phase 3: Per-Subtype Flow Analysis (NB07) — COMPLETE
+
+**Notebook:** `07_subtype_flow_analysis.ipynb`
+**Model used:** `model_mix_brca.pt` (no retraining)
+**Method:** Forward pre-hook on the mixer captures the pre-mix fused latent vector h
+per test sample. Each sample's effective flow is computed as the activation-weighted
+engagement of the fixed routing matrix D, normalized by source-block L2 norm for
+cross-subtype comparability.
+
+### Key Findings
+
+| Subtype | n (test) | Dominant signal | Biological interpretation |
+|---------|----------|-----------------|--------------------------|
+| LumA | 53 | CNV→miRNA = 0.0263 | Copy-number driven miRNA dysregulation |
+| LumB | 7 | Low contrast, miRNA self-routes | Intermediate, closer to LumA |
+| HER2 | 20 | CNV→miRNA = 0.0246 | Chr17q12 amplification alters miRNA dosage |
+| Basal | 4 | Methy→mRNA = 0.0229 (highest in panel); Methy diagonal = 0.0163 (lowest) | Widespread epigenetic reprogramming confirmed |
+| Normal | 17 | mRNA→Methy = 0.0279 (highest value in entire panel) | Normal tissue maintains epigenetic identity via transcription-to-methylation feedback |
+
+### Cross-Subtype Observations
+
+- **Methylation is the most cross-routing omics block** in every subtype: the Methy
+  diagonal is consistently the lowest or near-lowest self-routing entry per row.
+- **mRNA→Methy is globally elevated** and most prominent in Normal tissue —
+  the model learned Normal's epigenetic maintenance signal without being told subtype identity.
+- **CNV routes to miRNA, not mRNA** — stronger than the original prediction of
+  CNV→mRNA, but biologically defensible: miRNA genes themselves are subject to
+  copy number changes.
+- **Basal Methy→mRNA** is the highest cross-modal methylation signal in the panel,
+  consistent with the widespread epigenetic reprogramming that defines Basal-like tumours.
+
+> **Note on Basal:** n=4 in the test split. Results are directionally consistent with
+> biology but statistically unreliable at this sample size.
+
+### Scientific note: what "per-subtype flow" measures
+
+`SoftPermutationMix` learns a single fixed 256×256 routing matrix D shared across all
+samples. Per-subtype differences arise entirely from h (the pre-mixer fused latent
+vector), not from D adapting. The analysis measures **activation-weighted engagement**
+of the fixed routing structure — which omics blocks each subtype actively uses given
+the shared learned routing.
+
+### Output Figures
+
+- `figures/07_subtype_flow_luma.png`
+- `figures/07_subtype_flow_lumb.png`
+- `figures/07_subtype_flow_her2.png`
+- `figures/07_subtype_flow_basal.png`
+- `figures/07_subtype_flow_normal.png`
+- `figures/07_subtype_flow_panel.png` ← 5-panel combined (paper figure)
+- `figures/07_subtype_flow_matrices.npz` ← numerical matrices for reproducibility
 
 ---
 
