@@ -76,6 +76,8 @@ cross-subtype comparability.
 | Basal | 4 | Methy→mRNA = 0.0229 (highest in panel); Methy diagonal = 0.0163 (lowest) | Widespread epigenetic reprogramming confirmed |
 | Normal | 17 | mRNA→Methy = 0.0279 (highest value in entire panel) | Normal tissue maintains epigenetic identity via transcription-to-methylation feedback |
 
+![Per-subtype cross-omics flow panel](figures/07_subtype_flow_panel.png)
+
 ### Cross-Subtype Observations
 
 - **Methylation is the most cross-routing omics block** in every subtype: the Methy
