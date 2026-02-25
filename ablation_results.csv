@@ -1,0 +1,21 @@
+ablation,label,val_acc,test_acc,alpha_max_dev,train_time_s
+reference,"NB06 reference (K=4, mult=20, k=50, ld=64)",0.851,0.822,0.025,
+K_sweep,K=1,0.8119,0.8317,0.0,5.5
+K_sweep,K=2,0.8218,0.8119,0.0273,4.9
+K_sweep,K=4,0.7822,0.8218,0.025,5.4
+K_sweep,K=8,0.8119,0.8218,0.0322,5.7
+alpha_mode,"Learned α  (K=4, mult=20)",0.7822,0.8218,0.025,4.7
+alpha_mode,"Fixed unif (K=4, no grad)",0.7921,0.8218,0.0,4.7
+alpha_mode,K=1 single perm (degenerate),0.8119,0.8317,0.0,4.6
+lr_mult,1×,0.7921,0.8218,0.0028,4.8
+lr_mult,5×,0.7822,0.8218,0.0108,4.9
+lr_mult,10×,0.7822,0.8218,0.0171,4.8
+lr_mult,20×,0.7822,0.8218,0.025,4.8
+lr_mult,50×,0.7822,0.8218,0.0375,4.8
+feature_count,25 feat/block,0.7921,0.7723,0.0568,5.1
+feature_count,50 feat/block,0.7822,0.8218,0.025,4.6
+feature_count,100 feat/block,0.901,0.8218,0.0107,4.7
+feature_count,200 feat/block,0.8911,0.8416,0.0461,4.7
+latent_dim,ld=32,0.8119,0.7723,0.0675,5.5
+latent_dim,ld=64,0.7822,0.8218,0.025,4.6
+latent_dim,ld=128,0.802,0.8416,0.0177,4.7
